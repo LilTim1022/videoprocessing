@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
         });
 
         manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        accelerometer = manager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        accelerometer = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
     }
     protected void onResume() {
@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
 
         history[0] = event.values[0];
         history[1] = event.values[1];
-        System.out.println("xChange::::: "+event.values[0]);
-        System.out.println("yChange::::: "+event.values[1]);
+        System.out.println("xChange::::: "+xChange);
+        System.out.println("yChange::::: "+xChange);
         String directionX = direction[0];
         String directionY = direction[1];
         if (xChange > 2){
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
                 jsonParams.put("x_value", event.values[0]);
                 jsonParams.put("y_value", event.values[1]);
                 StringEntity entity = new StringEntity(jsonParams.toString());
-                String url = apiUrl+"updateOverlay/"+xChange+"/"+yChange;
+                String url = apiUrl+"updateOverlay/"+event.values[0]+"/"+event.values[1];
                 asyncHttpClient.get(context, url, entity, "application/json",
                         new JsonHttpResponseHandler() {
                             @Override
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
                 jsonParams.put("x_value", xChange);
                 jsonParams.put("y_value", yChange);
                 StringEntity entity = new StringEntity(jsonParams.toString());
-                String url = apiUrl+"updateOverlay/"+xChange+"/"+yChange;
+                String url = apiUrl+"updateOverlay/"+event.values[0]+"/"+event.values[1];
                 asyncHttpClient.get(context, url, entity, "application/json",
                         new JsonHttpResponseHandler() {
                             @Override
