@@ -17,7 +17,6 @@ import android.widget.MediaController;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -82,12 +81,18 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
                                         videoView.start();
                                     } catch (JSONException e) {
                                         Toast.makeText(getApplicationContext(), ""+e, Toast.LENGTH_LONG).show();
+                                        overlayBtn.setClickable(true);
+                                        overlayBtn.setText("Insert Overlay");
+                                        overlayBtn.setTag("m");
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
                                     System.out.println("Failed.............:"+response);
+                                    overlayBtn.setClickable(true);
+                                    overlayBtn.setText("Insert Overlay");
+                                    overlayBtn.setTag("m");
                                     Toast.makeText(getApplicationContext(), "Failed to process API data.", Toast.LENGTH_LONG).show();
                                 }
 
@@ -224,7 +229,6 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
         builder.append(" y: ");
         builder.append(direction[1]);
 
-        //textView.setText(builder.toString());
     }
 
     @Override
