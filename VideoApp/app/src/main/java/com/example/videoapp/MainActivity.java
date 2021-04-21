@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity  implements SensorEventListe
         manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
+
     }
     protected void onResume() {
         super.onResume();
