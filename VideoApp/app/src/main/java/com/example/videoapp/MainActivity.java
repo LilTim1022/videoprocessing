@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     AsyncHttpClient asyncHttpClient;
     Context context;
-    float[] history = new float[2];
-    String[] direction = {"NONE", "NONE"};
+    float[] history = new float[2]; // Declared history Array to store movement value
+    String[] direction = {"NONE", "NONE"}; // Declared directions Array
     Button overlayBtn;
     SensorManager manager; // Declared a sensor manager
     Sensor accelerometer; // Declared a Sensor
@@ -39,9 +39,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        // play video when app run
         playVideo("getVideo");
         overlayBtn = (Button) findViewById(R.id.overlayBtn);
+        // add a flag as tag in overlay button to avoid initial API call for sensor event change
         overlayBtn.setTag("m");
 
         asyncHttpClient = new AsyncHttpClient();
@@ -49,8 +50,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 try {
+                    //disable overlay button after click
                     overlayBtn.setClickable(false);
+                    // change overlay button test after click
                     overlayBtn.setText("Processing..");
+                    // change the flag as tag in overlay button to API call for sensor event change
                     overlayBtn.setTag("d");
                     StringEntity entity = new StringEntity("");
 
@@ -60,12 +64,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                                 @Override
                                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                     try {
+                                        // enable overlay button after API response
                                         overlayBtn.setClickable(true);
                                         overlayBtn.setText("Insert Overlay");
                                         String videoUrl = response.getString("overlayUrl");
                                         playVideo(videoUrl);
                                     } catch (JSONException e) {
+                                        // TOAST to show the message to the user
                                         Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        // enable overlay button after API response
                                         overlayBtn.setClickable(true);
                                         overlayBtn.setText("Insert Overlay");
                                         overlayBtn.setTag("m");
@@ -74,14 +81,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                                 @Override
                                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+                                    // enable overlay button after API response
                                     overlayBtn.setClickable(true);
                                     overlayBtn.setText("Insert Overlay");
                                     overlayBtn.setTag("m");
+                                    // TOAST to show the message to the user
                                     Toast.makeText(getApplicationContext(), "Failed to process API data.", Toast.LENGTH_LONG).show();
                                 }
                             });
                 } catch (Exception e) {
-                    System.out.println("Exception:" + e.getMessage());
+                    // TOAST to show the message to the user
                     Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -107,30 +116,37 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        // execute when Sensor Event changes
 
         float xChange = history[0] - event.values[0];
         float yChange = history[1] - event.values[1];
 
+        // store initial X and Y axis value of sensor
         history[0] = event.values[0];
         history[1] = event.values[1];
+
+        // store initial direction of sensor
         String directionX = direction[0];
         String directionY = direction[1];
 
+        // detect direction change based on X axis changes
         if (xChange > 2) {
             direction[0] = "LEFT";
         } else if (xChange < -2) {
             direction[0] = "RIGHT";
         }
 
+        // detect direction change based on Y axis changes
         if (yChange > 2) {
             direction[1] = "DOWN";
         } else if (yChange < -2) {
             direction[1] = "UP";
         }
 
+        // do if direction change in X axis after overlay added
         if (!directionX.equals(direction[0]) && overlayBtn.getTag().equals("d")) {
             try {
-
+                // TOAST to show the message to the user
                 Toast.makeText(getApplicationContext(), "Moving overlay wait please.", Toast.LENGTH_SHORT).show();
                 StringEntity entity = new StringEntity("");
                 String url = apiBaseUrl + "updateOverlay/" + event.values[0] + "/" + event.values[1];
@@ -141,8 +157,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 try {
+                                    // TOAST to show the message to the user
                                     Toast.makeText(getApplicationContext(), "Overlay moved.", Toast.LENGTH_SHORT).show();
-                                    System.out.println(".............:" + response);
                                     String videoUrl = response.getString("overlayUrl");
                                     playVideo(videoUrl);
                                 } catch (JSONException e) {
@@ -152,18 +168,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                             @Override
                             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-                                System.out.println("Failed.............:" + response);
+                                // TOAST to show the message to the user
                                 Toast.makeText(getApplicationContext(), "Failed to process API data.", Toast.LENGTH_SHORT).show();
                             }
                         });
             } catch (Exception e) {
-                System.out.println("Exception:" + e.getMessage());
+                // TOAST to show the message to the user
                 Toast.makeText(getApplicationContext(), "Exception:" + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
+
+        // do if direction change in Y axis after overlay added
         if (!directionY.equals(direction[1]) && overlayBtn.getTag().equals("d")) {
-            Toast.makeText(getApplicationContext(), "Moving overlay wait please.", Toast.LENGTH_SHORT).show();
+
             try {
+                // TOAST to show the message to the user
+                Toast.makeText(getApplicationContext(), "Moving overlay wait please.", Toast.LENGTH_SHORT).show();
                 StringEntity entity = new StringEntity("");
                 String url = apiBaseUrl + "updateOverlay/" + event.values[0] + "/" + event.values[1];
 
@@ -173,22 +193,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                                 try {
+                                    // TOAST to show the message to the user
                                     Toast.makeText(getApplicationContext(), "Overlay moved.", Toast.LENGTH_SHORT).show();
                                     String videoUrl = response.getString("overlayUrl");
                                     playVideo(videoUrl);
                                 } catch (JSONException e) {
+                                    // TOAST to show the message to the user
                                     Toast.makeText(getApplicationContext(), "" + e, Toast.LENGTH_LONG).show();
                                 }
                             }
 
                             @Override
                             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-                                System.out.println("Failed.............:" + response);
+                                // TOAST to show the message to the user
                                 Toast.makeText(getApplicationContext(), "Failed to process API data.", Toast.LENGTH_SHORT).show();
                             }
                         });
             } catch (Exception e) {
-                System.out.println("Exception:" + e.getMessage());
+                // TOAST to show the message to the user
                 Toast.makeText(getApplicationContext(), "Exception:" + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
