@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Button overlayBtn;
     SensorManager manager; // Declared a sensor manager
     Sensor accelerometer; // Declared a Sensor
-    String apiBaseUrl = "http://192.168.2.18:5002/"; // sample REST api base url where Python flask API run
+    String apiBaseUrl = "http://192.168.2.1:5002/"; // sample REST api base url where Python flask API run
 
 
     @Override
