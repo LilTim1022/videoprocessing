@@ -86,6 +86,7 @@ class InsertOverlay(Resource):
             has_frame, frame = cap.read()
             # describe the type of font to be used.
             font = cv2.FONT_HERSHEY_SIMPLEX
+
             # inserting a dot on each frame
             cv2.putText(frame,
                         '.',
@@ -111,20 +112,22 @@ class InsertOverlay(Resource):
 
 
 class UpdateOverlay(Resource):
-    def get(self, x_value, y_value):
+    def put(self, x_value, y_value):
         # read displayed video
         cap = cv2.VideoCapture('videos/sample2.mp4')
         fps = cap.get(cv2.CAP_PROP_FPS)
+
+        # delete existing converted video
         if os.path.exists("videos/sample3.mp4"):
             os.remove("videos/sample3.mp4")
         count = 1
         x_position = 160
         y_position = 130
         if x_value:
-            x_position = int(x_value) + int(x_position)
+            x_position = x_value + x_position
 
         if y_value:
-            y_position = int(y_value) + int(y_position)
+            y_position = y_value + y_position
         print(x_position)
         print(y_position)
         while True:
@@ -132,11 +135,11 @@ class UpdateOverlay(Resource):
             has_frame, frame = cap.read()
             # describe the type of font to be used.
             font = cv2.FONT_HERSHEY_SIMPLEX
-            # inserting a dot on each frame
 
+            # inserting a dot on each frame
             cv2.putText(frame,
                         '.',
-                        (x_position, y_position),
+                        (int(x_position), int(y_position)),
                         font, 1,
                         (0, 255, 255),
                         2,
@@ -151,16 +154,20 @@ class UpdateOverlay(Resource):
 
         # release the cap object
         cap.release()
-        # convert frames with dot to video and display to the user
 
+        # convert frames with dot to video and display to the user
         frames_to_video("images/", "videos/sample3.mp4", fps)
         return {'overlayUrl': 'getOverlayVideo'}
 
 
-api.add_resource(GetVideo, '/getVideo')  # Route_1
-api.add_resource(InsertOverlay, '/insertOverlay')  # Route_2
-api.add_resource(UpdateOverlay, '/updateOverlay/<float(signed=True):x_value>/<float(signed=True):y_value>')  # Route_3
-api.add_resource(GetOverlayVideo, '/getOverlayVideo')  # Route_4
+# Route 1 to get video
+api.add_resource(GetVideo, '/getVideo')
+# Route 2 to insert overlay
+api.add_resource(InsertOverlay, '/insertOverlay')
+# Route 3 to move overlay
+api.add_resource(UpdateOverlay, '/updateOverlay/<float(signed=True):x_value>/<float(signed=True):y_value>')
+# Route 4 to get overlayed video
+api.add_resource(GetOverlayVideo, '/getOverlayVideo')
 
 if __name__ == '__main__':
-    app.run(host='192.168.2.18', port='5002')
+    app.run(host='192.168.2.18', port='5002')  # REST API server host and port where run
