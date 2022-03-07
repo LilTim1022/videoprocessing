@@ -33,6 +33,38 @@
             android:padding="10dp"
             />
 
+        <Button
+            android:id="@+id/playBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Play Overlayed Video"
+            android:background="@color/colorPrimary"
+            android:padding="10dp"
+            />
+        <Button
+            android:id="@+id/selectVidBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Select Video To Upload"
+            android:background="@color/colorPrimary"
+            android:padding="10dp"
+            />
+        <Button
+            android:id="@+id/uploadBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Upload"
+            android:background="@color/colorPrimary"
+            android:padding="10dp"
+            />
+         <Button
+            android:id="@+id/to_uploadpage_Btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="To Upload Page"
+            android:background="@color/colorPrimary"
+            android:padding="10dp"
+            />
     </LinearLayout>
 
 </LinearLayout>

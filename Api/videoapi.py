@@ -170,4 +170,5 @@ api.add_resource(UpdateOverlay, '/updateOverlay/<float(signed=True):x_value>/<fl
 api.add_resource(GetOverlayVideo, '/getOverlayVideo')
 
 if __name__ == '__main__':
-    app.run(host='192.168.2.1', port='5002')  # REST API server host and port where run
+    app.run(host='10.255.118.21', port='5002')  # REST API server host and port where run
+

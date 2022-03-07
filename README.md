@@ -8,3 +8,4 @@ For Api(REST server) :
 For VideoApp(android client):
 1. replace "apiBaseUrl " value with your Api's(Python) host and port (see MainActivity.java line 35)
 2. build the android app in emulator or mobile from android studio
+

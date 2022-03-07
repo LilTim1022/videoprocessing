@@ -3,6 +3,7 @@ package com.example.videoapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -23,6 +24,8 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 
+
+
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     AsyncHttpClient asyncHttpClient;
@@ -30,9 +33,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     float[] history = new float[2]; // Declared history Array to store movement value
     String[] direction = {"NONE", "NONE"}; // Declared directions Array
     Button overlayBtn;
+    Button playBtn;
+    Button selectVidBtn;
+    Button uploadBtn;
+    Button upload_pageBtn;
     SensorManager manager; // Declared a sensor manager
     Sensor accelerometer; // Declared a Sensor
-    String apiBaseUrl = "http://192.168.2.1:5002/"; // sample REST api base url where Python flask API run
+    String apiBaseUrl = "http://10.255.118.21:5002/"; // sample REST api base url where Python flask API run
 
 
     @Override
@@ -41,10 +48,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
         // play video when app run
         playVideo("getVideo");
+        playBtn = (Button) findViewById(R.id.playBtn);
         overlayBtn = (Button) findViewById(R.id.overlayBtn);
+        selectVidBtn = (Button) findViewById(R.id.selectVidBtn);
+        uploadBtn = (Button) findViewById(R.id.uploadBtn);
+        upload_pageBtn = (Button) findViewById(R.id.to_uploadpage_Btn);
         // add a flag as tag in overlay button to avoid initial API call for sensor event change
         overlayBtn.setTag("m");
 
+        //通过AsyncHttpClient获得播放视频的Url
         asyncHttpClient = new AsyncHttpClient();
         overlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +108,52 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        //播放按钮
+        playBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    //disable overlay button after click
+                    playBtn.setClickable(false);
+                    // change overlay button test after click
+                    playBtn.setText("FindingVideo..");
+                    // change the flag as tag in overlay button to API call for sensor event change
+                    playBtn.setTag("d");
+                    StringEntity entity = new StringEntity("");
+
+                    // A REST API POST call to insert an overlay inside the video
+                   playVideo("getOverlayVideo");
+                   playBtn.setText("Play Overlay Video");
+                } catch (Exception e) {
+                    // TOAST to show the message to the user
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+         uploadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    //disable overlay button after click
+//                    playBtn.setClickable(false);
+                    // change overlay button test after click
+//                    playBtn.setText("FindingVideo..");
+                    // change the flag as tag in overlay button to API call for sensor event change
+//                    playBtn.setTag("d");
+//                    StringEntity entity = new StringEntity("");
+
+                    // A REST API POST call to insert an overlay inside the video
+//                   playVideo("getOverlayVideo");
+//                   playBtn.setText("Play Overlay Video");
+                     Intent intent=new Intent(MainActivity.this,VideoUploadActivity.class);
+                     startActivity(intent);
+                } catch (Exception e) {
+                    // TOAST to show the message to the user
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         // An instance of the sensor service, and use that to get an instance of a particular sensor.
         manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
